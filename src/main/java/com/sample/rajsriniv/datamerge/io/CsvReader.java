@@ -1,6 +1,7 @@
 package com.sample.rajsriniv.datamerge.io;
 
-import au.com.bytecode.opencsv.CSVReader;
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvException;
 
 import java.io.File;
 import java.io.FileReader;
@@ -25,7 +26,7 @@ public class CsvReader implements DataFileReader {
 
     private void readCsvFile(File csvFileLocation) throws IOException {
         try (FileReader fileReader = new FileReader(csvFileLocation);
-             CSVReader csvReader = new CSVReader(fileReader, SPLIT_BY)) {
+             CSVReader csvReader = new CSVReader(fileReader)) {
             List<String[]> rows = csvReader.readAll();
             String[] header = rows.get(0);
             for (int i = 1; i < rows.size(); i++) {
@@ -36,6 +37,8 @@ public class CsvReader implements DataFileReader {
                 }
                 recordMap.put(Integer.parseInt((String) rowMap.get("ID")), rowMap);
             }
+        } catch (CsvException e) {
+            throw new RuntimeException(e);
         }
     }
 }
